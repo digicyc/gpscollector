@@ -37,7 +37,6 @@ func postGPS(c *gin.Context) {
         return
     }
 
-    // Add the new album to the slice.
     gps_data = append(gps_data, newGPS)
     c.IndentedJSON(http.StatusCreated, newGPS)
 }
