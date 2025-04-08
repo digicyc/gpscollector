@@ -56,6 +56,15 @@ func getGPSByID(c *gin.Context) {
 
 
 func main() {
+    // MongoDB connect
+    client, ctx, cancel, err := MongoConnect("mongodb://localhost:27017")
+    if err != nil {
+        panic(err)
+    }
+    defer MongoClose(client, ctx, cancel)
+    MongoPing(client, ctx)
+
+    // Route Setup
     router := gin.Default()
     router.GET("/gps", getGPS)
     router.GET("/gps/:id", getGPSByID)
