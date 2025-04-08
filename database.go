@@ -50,3 +50,25 @@ func InsertMany(client *mongo.Client, ctx context.Context, dataBase, col string,
 
     return result, err
 }
+
+func MongoQuery(client *mongo.Client, ctx context.Context, dataBase, col string, query, field interface{})(result *mongo.Cursor, err error) {
+    collection := client.Database(dataBase).Collection(col)
+
+    result, err = collection.Find(ctx, query, options.Find().SetProjection(field))
+    return result, err
+}
+
+func UpdateOne(client *mongo.Client, ctx context.Context, dataBase, col string, filter, update interface{})(result *mongo.UpdateResult, err error) {
+    collection := client.Database(dataBase).Collection(col)
+
+    result, err = collection.UpdateOne(ctx, filter, update)
+    return
+}
+
+
+func UpdateMany(client *mongo.Client, ctx context.Context, dataBase, col string, filter, update interface{})(result *mongo.UpdateResult, err error) {
+    collection := client.Database(dataBase).Collection(col)
+
+    result, err = collection.UpdateMany(ctx, filter, update)
+    return
+}
