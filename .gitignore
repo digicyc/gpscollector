@@ -6,3 +6,5 @@ go.work.sum
 .*.swp
 core
 main
+Notes.txt
+httptests/
