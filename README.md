@@ -7,5 +7,3 @@ Basic GoLang environment
 ## TODOs
 Things to come
  - Add Auth
- - Persist to MongoDB database
- - Separate to clean up main
