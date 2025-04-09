@@ -1,28 +1,28 @@
 package main
 
 import (
+    "log"
     "net/http"
     "os"
-    "log"
+    "time"
 
-    "go.mongodb.org/mongo-driver/bson"
     "github.com/gin-gonic/gin"
-    //"github.com/google/uuid"
+    "go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type gps struct {
+    Id  primitive.ObjectID `json:"id" bson:"_id,omitempty"`
     DevID      string  `json:"devid" bson:"devid"`
     Model      string  `json:"model" bson:"model"`
     Latitude   float64 `jsoon:"latitude" bson:"latitude"`
     Longitude  float64 `json:"longitude" bson:"longitude"`
     Elevation  float64 `json:"elevation" bson:"elevation"`
     TimeStamp  string  `json:"timestamp" bson:"timestamp"`
+    LastUpdate primitive.DateTime `json:"lastUpdate" bson:"lastUpdate"`
 }
 
 var gps_data = []gps{
-    {DevID: "1", Model: "model1", Latitude: 47.407614681869745, 
-     Longitude: 8.553115781396627, Elevation: 451.79998779296875,
-     TimeStamp: "2015-11-13T12:57:24.000Z"},
 }
 
 
@@ -35,14 +35,13 @@ func getUri() string {
 }
 
 func getGPS(c *gin.Context) {
-    // Get GPS from database
+    // Get ALL GPS for device.
     c.IndentedJSON(http.StatusOK, gps_data)
 }
 
 
 func postGPS(c *gin.Context) {
     var newGPS gps
-    //uid := uuid.New()
 
     if err := c.BindJSON(&newGPS); err != nil {
         log.Fatal(err)
@@ -53,7 +52,8 @@ func postGPS(c *gin.Context) {
     if err != nil {
         panic(err)
     }
-    //gps_data = append(gps_data, newGPS)
+
+    newGPS.LastUpdate = primitive.NewDateTimeFromTime(time.Now())
     InsertOne(client, ctx, "gpsdata", newGPS)
     c.IndentedJSON(http.StatusCreated, newGPS)
     MongoClose(client, ctx, cancel)
@@ -72,17 +72,17 @@ func getGPSByID(c *gin.Context) {
     option := bson.D{{"_id", 0}}
     cursor, err := MongoQuery(client, ctx, "gpsdata", filter, option)
     if err != nil {
-        panic(err)
+        c.IndentedJSON(http.StatusNotFound, gin.H{"message": "gps data not found"})
     }
     //var results []bson.D
     var results []gps
     if err := cursor.All(ctx, &results); err != nil {
-        panic(err)
+        c.IndentedJSON(http.StatusNotFound, gin.H{"message": "gps data not found"})
     }
 
-    c.IndentedJSON(http.StatusOK, results)
-    //c.IndentedJSON(http.StatusNotFound, gin.H{"message": "gps data not found"})
     MongoClose(client, ctx, cancel)
+
+    c.IndentedJSON(http.StatusOK, results)
 }
 
 
