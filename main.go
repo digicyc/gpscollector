@@ -13,7 +13,7 @@ import (
 
 type gps struct {
     DevID      string  `json:"devid" bson:"devid"`
-    CustID     string  `json:"custid" bson:"custid"`
+    OwnerID    string  `json:"ownerid" bson:"ownerid"`
     Model      string  `json:"model" bson:"model"`
     Latitude   float64 `jsoon:"latitude" bson:"latitude"`
     Longitude  float64 `json:"longitude" bson:"longitude"`
@@ -25,6 +25,7 @@ type gps struct {
 
 func getUri() string {
     var uri string
+
     if uri = os.Getenv("MONGODB_URI"); uri == "" {
         return "mongodb://localhost:27017"
     }
