@@ -54,7 +54,7 @@ func postGPS(c *gin.Context) {
         panic(err)
     }
     //gps_data = append(gps_data, newGPS)
-    InsertOne(client, ctx, "gpscollector", "gpsdata", newGPS)
+    InsertOne(client, ctx, "gpsdata", newGPS)
     c.IndentedJSON(http.StatusCreated, newGPS)
     MongoClose(client, ctx, cancel)
 }
@@ -70,7 +70,7 @@ func getGPSByID(c *gin.Context) {
 
     filter := bson.D{{"devid", id}}
     option := bson.D{{"_id", 0}}
-    cursor, err := MongoQuery(client, ctx, "gpscollector", "gpsdata", filter, option)
+    cursor, err := MongoQuery(client, ctx, "gpsdata", filter, option)
     if err != nil {
         panic(err)
     }

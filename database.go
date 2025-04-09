@@ -9,6 +9,7 @@ import (
     "go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+var dataBase = "gpscollector"
 
 func MongoClose(client *mongo.Client, ctx context.Context, cancel context.CancelFunc) {
     defer cancel()
@@ -35,7 +36,7 @@ func MongoPing(client *mongo.Client, ctx context.Context) error {
     return nil
 }
 
-func InsertOne(client *mongo.Client, ctx context.Context, dataBase, col string, doc interface{})(*mongo.InsertOneResult, error) {
+func InsertOne(client *mongo.Client, ctx context.Context, col string, doc interface{})(*mongo.InsertOneResult, error) {
     collection := client.Database(dataBase).Collection(col)
 
     result, err := collection.InsertOne(ctx, doc)
@@ -43,7 +44,7 @@ func InsertOne(client *mongo.Client, ctx context.Context, dataBase, col string, 
     return result, err
 }
 
-func InsertMany(client *mongo.Client, ctx context.Context, dataBase, col string, docs []interface{})(*mongo.InsertManyResult, error) {
+func InsertMany(client *mongo.Client, ctx context.Context, col string, docs []interface{})(*mongo.InsertManyResult, error) {
     collection := client.Database(dataBase).Collection(col)
 
     result, err := collection.InsertMany(ctx, docs)
@@ -51,14 +52,14 @@ func InsertMany(client *mongo.Client, ctx context.Context, dataBase, col string,
     return result, err
 }
 
-func MongoQuery(client *mongo.Client, ctx context.Context, dataBase, col string, query, field interface{})(result *mongo.Cursor, err error) {
+func MongoQuery(client *mongo.Client, ctx context.Context, col string, query, field interface{})(result *mongo.Cursor, err error) {
     collection := client.Database(dataBase).Collection(col)
 
     result, err = collection.Find(ctx, query, options.Find().SetProjection(field))
     return result, err
 }
 
-func UpdateOne(client *mongo.Client, ctx context.Context, dataBase, col string, filter, update interface{})(result *mongo.UpdateResult, err error) {
+func UpdateOne(client *mongo.Client, ctx context.Context, col string, filter, update interface{})(result *mongo.UpdateResult, err error) {
     collection := client.Database(dataBase).Collection(col)
 
     result, err = collection.UpdateOne(ctx, filter, update)
@@ -66,21 +67,21 @@ func UpdateOne(client *mongo.Client, ctx context.Context, dataBase, col string, 
 }
 
 
-func UpdateMany(client *mongo.Client, ctx context.Context, dataBase, col string, filter, update interface{})(result *mongo.UpdateResult, err error) {
+func UpdateMany(client *mongo.Client, ctx context.Context, col string, filter, update interface{})(result *mongo.UpdateResult, err error) {
     collection := client.Database(dataBase).Collection(col)
 
     result, err = collection.UpdateMany(ctx, filter, update)
     return
 }
 
-func DeleteOne(client *mongo.Client, ctx context.Context, dataBase, col string, query interface{})(result *mongo.DeleteResult, err error) {
+func DeleteOne(client *mongo.Client, ctx context.Context, col string, query interface{})(result *mongo.DeleteResult, err error) {
     collection := client.Database(dataBase).Collection(col)
 
     result, err = collection.DeleteOne(ctx, query)
     return
 }
 
-func DeleteMany(client *mongo.Client, ctx context.Context, dataBase, col string, query interface{})(result *mongo.DeleteResult, err error) {
+func DeleteMany(client *mongo.Client, ctx context.Context, col string, query interface{})(result *mongo.DeleteResult, err error) {
     collection := client.Database(dataBase).Collection(col)
 
     result, err = collection.DeleteMany(ctx, query)
