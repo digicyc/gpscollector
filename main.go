@@ -12,17 +12,14 @@ import (
 )
 
 type gps struct {
-    Id  primitive.ObjectID `json:"id" bson:"_id,omitempty"`
     DevID      string  `json:"devid" bson:"devid"`
+    CustID     string  `json:"custid" bson:"custid"`
     Model      string  `json:"model" bson:"model"`
     Latitude   float64 `jsoon:"latitude" bson:"latitude"`
     Longitude  float64 `json:"longitude" bson:"longitude"`
     Elevation  float64 `json:"elevation" bson:"elevation"`
     TimeStamp  string  `json:"timestamp" bson:"timestamp"`
     LastUpdate primitive.DateTime `json:"lastUpdate" bson:"lastUpdate"`
-}
-
-var gps_data = []gps{
 }
 
 
@@ -33,12 +30,6 @@ func getUri() string {
     }
     return uri
 }
-
-func getGPS(c *gin.Context) {
-    // Get ALL GPS for device.
-    c.IndentedJSON(http.StatusOK, gps_data)
-}
-
 
 func postGPS(c *gin.Context) {
     var newGPS gps
@@ -97,7 +88,7 @@ func main() {
 
     // Route Setup
     router := gin.Default()
-    router.GET("/gps", getGPS)
+    //router.GET("/gps", getGPS)
     router.GET("/gps/:id", getGPSByID)
     router.POST("/gpsdata", postGPS)
 
