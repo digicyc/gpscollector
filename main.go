@@ -60,13 +60,13 @@ func getGPSByID(c *gin.Context) {
         panic(err)
     }
 
-    filter := bson.D{{"devid", id}}
-    option := bson.D{{"_id", 0}}
+    filter := bson.D{{Key: "devid", Value: id}}
+    option := bson.D{{Key: "_id", Value: 0}}
     cursor, err := MongoQuery(client, ctx, "gpsdata", filter, option)
     if err != nil {
         c.IndentedJSON(http.StatusNotFound, gin.H{"message": "gps data not found"})
     }
-    //var results []bson.D
+
     var results []gps
     if err := cursor.All(ctx, &results); err != nil {
         c.IndentedJSON(http.StatusNotFound, gin.H{"message": "gps data not found"})
